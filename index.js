@@ -34,7 +34,7 @@ app.get('/herois', async (req, res) => {
     }
   });
 
-  app.post('/bruxos', async (req, res) => {
+  app.post('/herois', async (req, res) => {
     try {
       const { nome, poder, nivel, hp} = req.body;
   
@@ -47,3 +47,28 @@ app.get('/herois', async (req, res) => {
       res.status(500).send('Erro ao adicionar heroi');
     }
   });
+
+  app.put('/herois/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { nome, poder, nivel, hp } = req.body;
+      await pool.query('UPDATE herois SET nome = $1, poder = $2, nivel = $3, hp = $4 WHERE id = $6', [nome, poder, nivel, hp, id]);
+      res.status(200).send({ mensagem: 'Heroi atualizado com sucesso' });
+    } catch (error) {
+      console.error('Erro ao atualizar heroi:', error);
+      res.status(500).send('Erro ao atualizar heroi');
+    }
+  });
+
+  app.delete('/herois/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      await pool.query('DELETE FROM herois WHERE id = $1', [id]);
+      res.status(200).send({ mensagem: 'Heroi excluído com sucesso' });
+    } catch (error) {
+      console.error('Erro ao excluir Heroi:', error);
+      res.status(500).send('Erro ao excluir heroi');
+    }
+  });
+
+  
